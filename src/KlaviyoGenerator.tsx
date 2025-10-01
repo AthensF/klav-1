@@ -115,7 +115,15 @@ export default function KlaviyoGenerator() {
 
         {/* Prompt Input */}
         <div className="mb-8">
-          <div className="relative">
+          <form
+            className="relative"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!prompt.trim()) return;
+              const baseUrl = import.meta.env.BASE_URL ?? '/';
+              window.location.href = `${baseUrl}2-klaviyo-agent-ui.html`;
+            }}
+          >
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
@@ -124,14 +132,14 @@ export default function KlaviyoGenerator() {
               rows={3}
             />
             <button
-              type="button"
+              type="submit"
               className="absolute bottom-3 right-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white shadow-md transition-colors hover:bg-orange-600 disabled:opacity-50"
               disabled={!prompt.trim()}
               aria-label="Submit prompt"
             >
               <ArrowUp className="h-5 w-5" />
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Example Prompts */}
