@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, FileText, Layout, Share2, Shuffle, Plus, PlayCircle } from 'lucide-react';
+import { Mail, FileText, Layout, Share2, Shuffle, Plus, PlayCircle, ArrowUp } from 'lucide-react';
 
 export default function KlaviyoGenerator() {
   const [prompt, setPrompt] = useState('');
@@ -115,13 +115,23 @@ export default function KlaviyoGenerator() {
 
         {/* Prompt Input */}
         <div className="mb-8">
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Describe what you'd like to create..."
-            className="w-full px-6 py-4 rounded-xl border-2 border-slate-200 focus:border-orange-400 focus:outline-none resize-none text-slate-700"
-            rows={3}
-          />
+          <div className="relative">
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Describe what you'd like to create..."
+              className="w-full px-6 py-4 pr-16 rounded-xl border-2 border-slate-200 focus:border-orange-400 focus:outline-none resize-none text-slate-700"
+              rows={3}
+            />
+            <button
+              type="button"
+              className="absolute bottom-3 right-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white shadow-md transition-colors hover:bg-orange-600 disabled:opacity-50"
+              disabled={!prompt.trim()}
+              aria-label="Submit prompt"
+            >
+              <ArrowUp className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Example Prompts */}

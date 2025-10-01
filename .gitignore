@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# GitHub Pages cache created by gh-pages
+node_modules/.cache/
+
+# Logs
+npm-debug.log*
+
+# OS files
+.DS_Store
