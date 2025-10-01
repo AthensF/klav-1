@@ -266,63 +266,527 @@
             padding: 40px;
             color: #6b7280;
         }
+
+        /* Email composer + scheduling layout */
+        .content-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .section-card h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .section-card p.section-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        /* Composer styles (adapted from ice-cream email) */
+        .composer-card {
+            background: linear-gradient(180deg, #f3f4ff 0%, #ede9fe 100%);
+            padding: 32px;
+            border-radius: 20px;
+        }
+
+        .composer-inner {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 12px 35px rgba(79, 70, 229, 0.15);
+        }
+
+        .composer-inner h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #4f46e5;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .composer-inner .subtitle {
+            text-align: center;
+            color: #374151;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .product-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .product-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 768px) {
+            .product-row,
+            .product-row:nth-child(even) {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .product-image {
+            width: 160px;
+            height: 160px;
+            border-radius: 28px;
+            background-position: center;
+            background-size: cover;
+            flex-shrink: 0;
+        }
+
+        .product-image.dessert-bars {
+            background-image: linear-gradient(135deg, #22d3ee, #0ea5e9);
+        }
+
+        .product-image.ice-cream {
+            background-image: linear-gradient(135deg, #f472b6, #facc15);
+        }
+
+        .product-image.cookie-sandos {
+            background-image: linear-gradient(135deg, #a3a3a3, #1f2937);
+        }
+
+        .product-info .product-name {
+            color: #4f46e5;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-info .product-desc {
+            color: #475569;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .product-info .shop-link {
+            color: #0f172a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .product-info .shop-link:hover {
+            text-decoration: underline;
+        }
+
+        .coupon-panel {
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .coupon-panel .coupon-text {
+            color: #4f46e5;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .coupon-panel .coupon-box {
+            display: inline-block;
+            border: 2px dashed #4f46e5;
+            padding: 18px 28px;
+            border-radius: 14px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .coupon-panel .cta-button {
+            margin-top: 22px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .coupon-panel .cta-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.35);
+        }
+
+        .coupon-panel .fine-print {
+            margin-top: 16px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .composer-footer {
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .composer-footer .composer-social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .composer-footer .composer-social-icons a {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+
+        .composer-footer .composer-links {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 18px;
+        }
+
+        .composer-footer .composer-links a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .composer-footer .composer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .composer-footer .composer-footer-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 14px;
+        }
+
+        .composer-footer .composer-brand {
+            display: inline-block;
+            padding: 8px 22px;
+            font-weight: 700;
+            background: #0f172a;
+            color: white;
+            border-radius: 999px;
+            font-size: 0.9rem;
+        }
+
+        /* Recipients & schedule styles */
+        .form-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .input-control,
+        .select-control,
+        .textarea-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-control:focus,
+        .select-control:focus,
+        .textarea-control:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .audience-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .audience-tag {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audience-tag button {
+            border: none;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .delivery-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .option-tile {
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .option-tile input[type="radio"] {
+            margin-top: 4px;
+        }
+
+        .option-tile.active {
+            border-color: #4f46e5;
+            background: #eef2ff;
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.1);
+        }
+
+        .option-tile h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .option-tile p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .schedule-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button-secondary,
+        .button-primary {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button-secondary {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+
+        .button-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+        }
+
+        .button-primary {
+            background: #111827;
+            color: white;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(17, 24, 39, 0.18);
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="logo">K</div>
         <div class="nav-item active">🏠 Home</div>
-        <div class="nav-item">📧 Campaigns</div>
-        <div class="nav-item">🔄 Flows</div>
-        <div class="nav-item">📝 Sign-up forms</div>
-        <div class="nav-item">⭐ Reviews</div>
+        <div class="nav-item">✉️ Email composer</div>
+        <div class="nav-item">👥 Recipients </div>
+        <div class="nav-item">🗓️ Schedule / Send</div>
     </div>
 
     <div class="main-content">
         <div class="header">
             <h1>Welcome to Klaviyo</h1>
         </div>
+        <div class="content-grid">
+            <div class="section-card">
+                <h2>✉️ Email composer</h2>
+                <p class="section-subtitle">Preview the creative your subscribers will receive before you pick recipients or scheduling.</p>
+                <div class="composer-card">
+                    <div class="composer-inner">
+                        <h1>Don't miss out!</h1>
+                        <p class="subtitle">Don't wait too long or your savings will melt away. Check out our most popular flavours of the week.</p>
 
-        <div class="banner">
-            <div class="banner-icon">🤖</div>
-            <div class="banner-content">
-                <h3>The AI campaign builder is here</h3>
-                <p>Build multi-step campaigns with your AI agent. Create email, SMS, and push campaigns in seconds.</p>
-                <button class="btn btn-primary" onclick="showAgentMessage('Starting new campaign...')">Create campaign</button>
-                <button class="btn btn-secondary" style="margin-left: 8px;">Learn more</button>
+                        <div class="product-row">
+                            <div class="product-image dessert-bars"></div>
+                            <div class="product-info">
+                                <div class="product-name">Dessert Bars</div>
+                                <p class="product-desc">Inspired by flavours around the world, there's a treat for everyone.</p>
+                                <a class="shop-link" href="#">Shop Now →</a>
+                            </div>
+                        </div>
+
+                        <div class="product-row">
+                            <div class="product-image ice-cream"></div>
+                            <div class="product-info">
+                                <div class="product-name">Hard Ice Cream</div>
+                                <p class="product-desc">Five new seasonal flavours just landed. Scoop them up while they're here!</p>
+                                <a class="shop-link" href="#">Shop Now →</a>
+                            </div>
+                        </div>
+
+                        <div class="product-row">
+                            <div class="product-image cookie-sandos"></div>
+                            <div class="product-info">
+                                <div class="product-name">Cookie Sandos</div>
+                                <p class="product-desc">Nom nom nom. Skip the ham—bring on the ice cream sandwich.</p>
+                                <a class="shop-link" href="#">Shop Now →</a>
+                            </div>
+                        </div>
+
+                        <div class="coupon-panel">
+                            <p class="coupon-text">Copy the coupon code below and use it at checkout</p>
+                            <div class="coupon-box">SWEETTREATS25</div>
+                            <button class="cta-button" type="button">Shop now</button>
+                            <p class="fine-print">Offer expires at midnight. One coupon per order.</p>
+                        </div>
+
+                        <div class="composer-footer">
+                            <div class="composer-social-icons">
+                                <a href="#" aria-label="Facebook">f</a>
+                                <a href="#" aria-label="X">𝕏</a>
+                                <a href="#" aria-label="LinkedIn">in</a>
+                                <a href="#" aria-label="YouTube">▶</a>
+                            </div>
+                            <div class="composer-links">
+                                <a href="#">Update my preferences</a> • <a href="#">View in your browser</a>
+                            </div>
+                            <div class="composer-links">
+                                <a href="#">🐦</a> • <a href="#">f</a> • <a href="#">📷</a>
+                            </div>
+                            <div class="composer-footer-text">
+                                No longer want to receive these emails? <a href="#">Unsubscribe</a>
+                            </div>
+                            <div class="composer-footer-text">organizationname@organization.com • full_address</div>
+                            <span class="composer-brand">klaviyo®</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2>👥 Recipients</h2>
+                <p class="section-subtitle">Decide who should receive this send and confirm your targeting.</p>
+
+                <div class="form-stack">
+                    <div class="form-group">
+                        <label for="segmentSearch">Search segments or lists</label>
+                        <input id="segmentSearch" type="text" class="input-control" placeholder="Start typing segment name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Included audiences</label>
+                        <div class="audience-tags">
+                            <span class="audience-tag">VIP Customers<button type="button" aria-label="Remove VIP Customers">×</button></span>
+                            <span class="audience-tag">New Signups<button type="button" aria-label="Remove New Signups">×</button></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="excludeSegments">Exclude audiences</label>
+                        <textarea id="excludeSegments" class="textarea-control" rows="3" placeholder="Add segments, profiles or suppression lists to exclude"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smartSending">Smart sending</label>
+                        <select id="smartSending" class="select-control">
+                            <option>Respect smart sending windows</option>
+                            <option>Send regardless of past sends</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <h3>✨ Pick up where you left off</h3>
-            <div class="draft-item" onclick="showAgentMessage('Loading campaign draft...')">
-                <div><strong>Campaign Sep 30, 2025, 8:54 PM</strong></div>
-                <div style="color: #6b7280;">Audience 1</div>
-                <div class="draft-meta">
-                    <span style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px; margin-right: 8px;">Draft</span>
-                    Started on: Sep 30, 8:55 PM
-                </div>
-            </div>
-            <div class="empty-state">
-                <p>You have no more drafts created in the last 30 days.</p>
-                <button class="btn btn-secondary" style="margin-top: 16px;" onclick="showAgentMessage('Creating new campaign...')">+ Create campaign</button>
-            </div>
-        </div>
+        <div class="section-card">
+            <h2>🗓️ Schedule or send</h2>
+            <p class="section-subtitle">Choose when this campaign should go out to your recipients.</p>
 
-        <div class="card">
-            <h3>Business performance summary</h3>
-            <p style="color: #6b7280; margin-bottom: 20px;">Aug 31, 2025 - Sep 30, 2025</p>
-            <div class="metric-grid">
-                <div class="metric-card">
-                    <div class="metric-value">0</div>
-                    <div style="color: #6b7280; margin-top: 8px;">Active on Site</div>
+            <div class="delivery-options">
+                <label class="option-tile active">
+                    <input type="radio" name="sendOption" value="schedule" checked />
+                    <div>
+                        <h3>Schedule</h3>
+                        <p>Select a future date and time. We'll take care of the rest.</p>
+                    </div>
+                </label>
+                <label class="option-tile">
+                    <input type="radio" name="sendOption" value="now" />
+                    <div>
+                        <h3>Send now</h3>
+                        <p>Launch immediately using your default sending settings.</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="schedule-grid">
+                <div class="form-group">
+                    <label for="sendType">Send type</label>
+                    <select id="sendType" class="select-control">
+                        <option>Fixed send time</option>
+                        <option>Optimal send time</option>
+                    </select>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-value">0</div>
-                    <div style="color: #6b7280; margin-top: 8px;">Conversions</div>
+                <div class="form-group">
+                    <label for="scheduleDate">Date</label>
+                    <input id="scheduleDate" type="date" class="input-control" value="2025-10-01" />
+                </div>
+                <div class="form-group">
+                    <label for="scheduleTime">Time</label>
+                    <input id="scheduleTime" type="time" class="input-control" />
+                </div>
+                <div class="form-group">
+                    <label for="scheduleTimezone">Timezone</label>
+                    <select id="scheduleTimezone" class="select-control">
+                        <option value="recipient">Recipient local time</option>
+                        <option value="utc">UTC</option>
+                        <option value="london">Europe/London</option>
+                        <option value="newyork">America/New_York</option>
+                    </select>
                 </div>
             </div>
-            <button class="btn btn-secondary" style="margin-top: 20px;">View dashboard</button>
+
+            <div class="schedule-actions">
+                <button class="button-secondary" type="button">Cancel</button>
+                <button class="button-primary" type="button">Schedule campaign</button>
+            </div>
         </div>
     </div>
 

@@ -121,7 +121,9 @@ export default function KlaviyoGenerator() {
               e.preventDefault();
               if (!prompt.trim()) return;
               const baseUrl = import.meta.env.BASE_URL ?? '/';
-              window.location.href = `${baseUrl}2-klaviyo-agent-ui.html`;
+              const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+              const targetUrl = new URL('2-klaviyo-agent-ui.html', `${window.location.origin}${normalizedBase}`);
+              window.location.href = targetUrl.toString();
             }}
           >
             <textarea
