@@ -231,7 +231,6 @@
             align-items: center;
         }
 
-        .agent-input input,
         .agent-input textarea {
             width: 100%;
             padding: 12px 52px 12px 12px;
@@ -245,7 +244,6 @@
             overflow-y: auto;
         }
 
-        .agent-input input:focus,
         .agent-input textarea:focus {
             outline: none;
             border-color: #5C4CDB;
@@ -1064,7 +1062,6 @@
 
         function clearAgent() {
             const container = document.getElementById('agentMessages');
-            container.innerHTML = '<div class="agent-message">Hello! I\'m your Klaviyo AI agent. I can help you create campaigns, analyze performance, and optimize your marketing.</div><div class="agent-message">What would you like to do today?</div>';
             container.innerHTML = '<div class="agent-message">👋 Hello! I\'m your Klaviyo AI agent. I can help you create campaigns, analyze performance, and optimize your marketing.</div><div class="agent-message">What would you like to do today?</div>';
         }
 
