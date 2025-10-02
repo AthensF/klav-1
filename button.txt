@@ -1,0 +1,55 @@
+.tag-input input::placeholder {
+            color: #94a3b8;
+        }
+
+        .email-input.invalid {
+            text-decoration: underline dotted red;
+            text-decoration-thickness: 2px;
+        }
+
+        .email-input.valid-preview {
+            background: #f0f9ff;
+        }
+
+        .email-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e8f0fe;
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            color: #1e40af;
+            font-weight: 500;
+        }
+
+        .email-pill button {
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .email-pill button:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            font-size: 0.8rem;
+            color: #ef4444;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klaviyo - Campaign Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f9fafb;
+            color: #1a1a1a;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5C4CDB;
+            padding: 0 20px 30px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #f3f4f6;
+            color: #1a1a1a;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 40px 120px 40px;
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .section-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-card h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .section-card p.section-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .form-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .input-control,
+        .select-control,
+        .textarea-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-control:focus,
+        .select-control:focus,
+        .textarea-control:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            min-height: 52px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+        }
+
+        .tag-input:focus-within {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .tag-input input {
+            flex: 1 1 160px;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 6px 4px;
+        }
+
+        .tag-input input::placeholder {
+            color: #94a3b8;
+        }
+
+        .email-input.invalid {
+            text-decoration: underline dotted red;
+            text-decoration-thickness: 2px;
+        }
+
+        .email-input-wrapper {
+            position: relative;
+            flex: 1 1 160px;
+        }
+
+        .email-suggestion-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: #e8f0fe;
+            border: 1px solid #1a73e8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            box-shadow: 0 2px 6px rgba(26, 115, 232, 0.15);
+            z-index: 10;
+            font-size: 0.85rem;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .email-suggestion-dropdown.hidden {
+            display: none;
+        }
+
+        .email-suggestion-dropdown::before {
+            content: "✓";
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .email-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e8f0fe;
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            color: #1e40af;
+            font-weight: 500;
+        }
+
+        .email-pill button {
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .email-pill button:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            font-size: 0.8rem;
+            color: #ef4444;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">K</div>
+        <div class="nav-item active">🏠 Home</div>
+        <div class="nav-item">✉️ Email composer</div>
+        <div class="nav-item">👥 Recipients </div>
+        <div class="nav-item">🗓️ Schedule / Send</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome to Klaviyo</h1>
+        </div>
+
+        <div class="section-card visible" id="recipientsSection">
+            <h2>👥 Recipients</h2>
+            <p class="section-subtitle">Decide who should receive this send and confirm your targeting.</p>
+            <div id="recipientsContent">
+                <div class="form-stack">
+                    <div class="form-group">
+                        <label for="segmentSearch">Send to</label>
+                        <div class="tag-input" id="emailPillContainer">
+                            <div class="email-input-wrapper">
+                                <input id="segmentSearch" class="email-input" type="text" placeholder="Enter email address (@gmail.com only)" />
+                                <div class="email-suggestion-dropdown hidden" id="emailSuggestion"></div>
+                            </div>
+                        </div>
+                        <div class="error-message" id="emailError">Only @gmail.com addresses allowed</div>
+                    </div>                    
+                    <div class="form-group">
+                        <label for="excludeSegments">Exclude audiences</label>
+                        <textarea id="excludeSegments" class="textarea-control" rows="3" placeholder="Add segments, profiles or suppression lists to exclude"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smartSending">Smart sending</label>
+                        <select id="smartSending" class="select-control">
+                            <option>Respect smart sending windows</option>
+                            <option>Send regardless of past sends</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initEmailValidation() {
+            const input = document.getElementById('segmentSearch');
+            const container = document.getElementById('emailPillContainer');
+            const errorMsg = document.getElementById('emailError');
+            const suggestionDropdown = document.getElementById('emailSuggestion');
+            const addedEmails = new Set();
+
+            input.addEventListener('input', () => {
+                const email = input.value.trim();
+                errorMsg.classList.remove('visible');
+                
+                if (email.endsWith('@gmail.com') && email.length > 10) {
+                    input.classList.remove('invalid');
+                    suggestionDropdown.textContent = email;
+                    suggestionDropdown.classList.remove('hidden');
+                } else if (email.includes('@')) {
+                    input.classList.add('invalid');
+                    suggestionDropdown.classList.add('hidden');
+                } else {
+                    input.classList.remove('invalid');
+                    suggestionDropdown.classList.add('hidden');
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault();
+                    const email = input.value.trim().toLowerCase();
+                    
+                    if (email.endsWith('@gmail.com') && email.length > 10) {
+                        if (addedEmails.has(email)) {
+                            errorMsg.textContent = 'Email already added';
+                            errorMsg.classList.add('visible');
+                            return;
+                        }
+                        
+                        createEmailPill(email, container, input, addedEmails, suggestionDropdown);
+                        input.value = '';
+                        input.classList.remove('invalid');
+                        suggestionDropdown.classList.add('hidden');
+                        errorMsg.classList.remove('visible');
+                    } else if (email.length > 0) {
+                        input.classList.add('invalid');
+                        errorMsg.textContent = 'Only @gmail.com addresses allowed';
+                        errorMsg.classList.add('visible');
+                        suggestionDropdown.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        function createEmailPill(email, container, input, addedEmails, suggestionDropdown) {
+            const pill = document.createElement('span');
+            pill.className = 'email-pill';
+            pill.dataset.email = email;
+            pill.innerHTML = `${email}<button type="button" aria-label="Remove ${email}">×</button>`;
+            
+            const removeBtn = pill.querySelector('button');
+            removeBtn.addEventListener('click', () => {
+                pill.remove();
+                addedEmails.delete(email);
+            });
+            
+            // Find the input wrapper and insert pill before it
+            const inputWrapper = container.querySelector('.email-input-wrapper');
+            if (inputWrapper) {
+                container.insertBefore(pill, inputWrapper);
+            } else {
+                container.insertBefore(pill, input);
+            }
+            
+            addedEmails.add(email);
+        }
+
+        window.addEventListener('load', () => {
+            initEmailValidation();
+        });
+    </script>
+</body>
+</html>
