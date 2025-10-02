@@ -726,6 +726,7 @@
 
         /* Animation-specific styles */
         .section-card {
+            position: relative;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease, transform 0.6s ease;
@@ -808,6 +809,71 @@
 
         .schedule-actions-bar.visible {
             opacity: 1;
+        }
+
+        /* Accept/Reject Dialogue */
+        .accept-reject-dialogue {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .accept-reject-dialogue.visible {
+            opacity: 1;
+        }
+
+        .accept-reject-dialogue.hidden {
+            display: none;
+        }
+
+        .dialogue-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-right: 8px;
+        }
+
+        .dialogue-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .dialogue-btn.accept {
+            background: #10b981;
+            color: white;
+        }
+
+        .dialogue-btn.accept:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .dialogue-btn.reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .dialogue-btn.reject:hover {
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
     </style>
 </head>
@@ -892,6 +958,11 @@
                         </div>
                     </div>
                 </div>
+                </div>
+                <div class="accept-reject-dialogue" id="emailDialogue">
+                    <span class="dialogue-text">Accept this design?</span>
+                    <button class="dialogue-btn accept" onclick="handleAccept()">Accept</button>
+                    <button class="dialogue-btn reject" onclick="handleReject()">Reject</button>
                 </div>
             </div>
 
@@ -1087,6 +1158,22 @@
                 // Add agent message
                 addAgentMessage(stage.agentMessage);
 
+                // Show accept/reject dialogue for email section
+                if (stage.sectionId === 'emailSection') {
+                    setTimeout(() => {
+                        const dialogue = document.getElementById('emailDialogue');
+                        dialogue.classList.add('visible');
+                        
+                        // Scroll to show dialogue after fade-in
+                        setTimeout(() => {
+                            section.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'end'
+                            });
+                        }, 300);
+                    }, 100);
+                }
+
                 // Move to next stage
                 currentStage++;
                 if (currentStage < stages.length) {
@@ -1096,6 +1183,16 @@
                     setTimeout(showCompletion, 800);
                 }
             }, 2000);
+        }
+
+        function handleAccept() {
+            const dialogue = document.getElementById('emailDialogue');
+            dialogue.classList.add('hidden');
+        }
+
+        function handleReject() {
+            const dialogue = document.getElementById('emailDialogue');
+            dialogue.classList.add('hidden');
         }
 
         function addAgentMessage(message) {
@@ -1113,7 +1210,7 @@
             agentMessages.appendChild(completionMsg);
             agentMessages.scrollTop = agentMessages.scrollHeight;
 
-            const summaryHtml = `✅ <strong>Campaign updated!</strong> Background switched to coral orange. Ready to preview or send.`;
+            const summaryHtml = `✅ <strong>Email updated!</strong> Background and font color switched to coral orange. Ready to schedule or send.`;
 
             animateAgentMessage(completionMsg, summaryHtml, 40, agentMessages).then(() => {
                 setButtonToSubmit();
