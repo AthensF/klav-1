@@ -1307,7 +1307,6 @@
                             
                             const mainContent = document.querySelector('.main-content');
                             const card = section;
-                            const cardRect = card.getBoundingClientRect();
                             const cardBottom = card.offsetTop + card.offsetHeight;
                             
                             // Calculate target scroll position
@@ -1343,7 +1342,7 @@
         }
 
         function addAgentMessage(message) {
-            // Do nothing - messages disabled
+            // Agent messages disabled for this flow
         }
 
         function showCompletion() {
@@ -1394,10 +1393,9 @@
             });
         }
 
-        let isGenerating = false;
-
         function toggleGeneration() {
-            window.location.href = '3-klaviyo-agent-ui-animated.html';
+            // Agent panel not used in this flow - button disabled
+            return;
         }
 
         function showScheduleModal() {

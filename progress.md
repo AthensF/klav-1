@@ -1,34 +1,109 @@
-# Project Progress
+# Klaviyo Campaign Generator - Project Documentation
 
-## Overview
-A React/Vite single-page experience has been enhanced to showcase a generative Email Campaign flow for Klaviyo. The page now simulates an AI agent crafting an email campaign step-by-step while guiding the viewer through each stage.
+## Project Overview
+A multi-page campaign creation flow with AI-assisted design, built with React + TypeScript and vanilla HTML/CSS.
 
-## Completed Work
-- **Generative flow orchestration**
-  - Added a cascading, three-stage build (Email Composer → Recipients → Schedule & Send) in `public/2-klaviyo-agent-ui-animated.html`.
-  - Implemented Knight Rider loading animations with per-section auto-scroll and precise 2s timing.
-  - Ensured the submit button locks into a red "stop" state while generation runs and reverts only after completion.
+## Production Pages (User Flow)
 
-- **Content & layout polish**
-  - Migrated the static email composer mock-up, recipient form, and scheduling tiles into the animated layout.
-  - Preserved the GitHub Pages-friendly asset structure by keeping static HTML files inside `public/`.
-  - Normalized user vs. agent messages (`.user-message` and `.agent-message` styles) for clarity.
+### 1. Landing Page (`index.html`)
+- **Tech**: React + TypeScript (Vite)
+- **Purpose**: Campaign creation entry point
+- **Features**: Prompt input, example templates, campaign type selection
+- **Navigation**: Submit → `public/2-klaviyo-agent-ui-animated.html`
 
-- **Agent panel enhancements**
-  - Added a ChatGPT-style prompt area with a circular submit button.
-  - Introduced a completion summary that streams (typewriter effect) inside the agent panel, including bold formatting, emojis, and action guidance.
-  - Auto-scroll keeps the most recent agent output visible.
+### 2. Campaign Builder (`public/2-klaviyo-agent-ui-animated.html`)
+- **Purpose**: Initial campaign generation with AI agent
+- **Features**: 
+  - Knight Rider loading animation
+  - Three-stage generation (Email, Recipients, Schedule)
+  - Agent panel (visual only)
+- **Navigation**: Agent submit → `public/3-klaviyo-agent-ui-animated.html`
 
-- **Deployment & tooling**
-  - Confirmed `npm run deploy` pushes the locally built `dist/` folder via `gh-pages`.
-  - Documented the behavior so the workflow is clear (local build → deploy → optional git push).
+### 3. Campaign Editor (`public/3-klaviyo-agent-ui-animated.html`)
+- **Purpose**: Coral theme update with user confirmation
+- **Features**:
+  - Single-stage Knight Rider animation (Email only)
+  - Accept/Reject dialogue (bottom-right of email card)
+  - Auto-scroll with footer clearance
+  - Schedule Campaign button → Confirmation modal
+  - Modal extracts date/time/recipients
+- **Navigation**: Confirm & Schedule → `public/4-klaviyo-confirmation.html`
 
-## Current State
-- Published animated page at `public/2-klaviyo-agent-ui-animated.html` with fully functional cascading generation.
-- Main branch and GitHub Pages deployment (via `gh-pages` branch) are up-to-date as of the latest commit `3234f03`.
-- Source tree contains both the original static HTML (`2-klaviyo-agent-ui.html`) and the new animated variant for comparison/testing.
+### 4. Confirmation Page (`public/4-klaviyo-confirmation.html`)
+- **Purpose**: Success confirmation after scheduling
+- **Features**:
+  - Animated success icon
+  - Campaign details summary
+  - Status badge with pulsing dot
+  - Next steps guidance
+- **Navigation**: Back to Dashboard → `public/5-campaigns-dashboard.html`
 
-## Next Ideas (Optional)
-- Add true cancellation logic when the stop button is clicked (clear timers, reset UI).
-- Expand the agent message streaming effect to intermediate responses for a fully conversational feel.
-- Parameterize timings (loader duration, scroll offsets) so product/design can tweak interactions without editing code.
+### 5. Campaigns Dashboard (`public/5-campaigns-dashboard.html`)
+- **Purpose**: List all campaigns
+- **Features**:
+  - Filterable table (status, date range)
+  - Sample campaigns with metrics
+  - Pagination
+- **Navigation**: Create Campaign → `/klav-1/index.html`
+
+## Completed Features
+- ✅ Full user flow (5 pages)
+- ✅ Knight Rider animations
+- ✅ Accept/Reject dialogue
+- ✅ Confirmation modal with data extraction
+- ✅ Sticky campaign actions footer
+- ✅ Auto-scroll with footer clearance
+- ✅ GitHub Pages deployment
+- ✅ Code cleanup (removed duplicates)
+
+## Technical Stack
+- **Frontend**: React 18 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS + Custom CSS
+- **Deployment**: GitHub Pages (gh-pages branch)
+
+## File Structure
+```
+klav-1/
+├── public/
+│   ├── 2-klaviyo-agent-ui-animated.html  # Campaign builder
+│   ├── 3-klaviyo-agent-ui-animated.html  # Campaign editor
+│   ├── 4-klaviyo-confirmation.html       # Success page
+│   └── 5-campaigns-dashboard.html        # Dashboard
+├── src/
+│   ├── KlaviyoGenerator.tsx              # Main component
+│   ├── App.tsx                           # App wrapper
+│   ├── main.tsx                          # Entry point
+│   └── index.css                         # Global styles
+├── old/                                  # Reference files
+├── index.html                            # Root HTML
+└── package.json                          # Dependencies
+```
+
+## Deployment
+```bash
+npm run build    # Build React app to dist/
+npm run deploy   # Deploy to GitHub Pages
+```
+
+## Recent Cleanup (Oct 1, 2025)
+- Removed duplicate .js files (KlaviyoGenerator.js, App.js, main.js)
+- Removed root-level klaviyo_generator.tsx duplicate
+- Cleaned up unused functions in HTML pages
+- Removed unused variables
+- Fixed lint errors
+- Total code reduction: ~14KB
+
+## Known Limitations
+- Agent panel on pages 2 & 3 is visual only (not functional)
+- Modal data extraction uses placeholder logic
+- No backend integration
+- Sample data only in dashboard
+
+## Future Enhancements
+- Add actual API integration
+- Implement functional agent panel
+- Add form validation
+- Add error handling
+- Add loading states for transitions
+- Extract shared CSS to common file

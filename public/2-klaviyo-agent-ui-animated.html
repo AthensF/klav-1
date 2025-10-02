@@ -1123,7 +1123,7 @@
         }
 
         function addAgentMessage(message) {
-            // Do nothing - messages disabled
+            // Agent messages disabled for this flow
         }
 
         function showCompletion() {
@@ -1178,14 +1178,11 @@
             });
         }
 
-        let isGenerating = false;
-
         function toggleGeneration() {
             window.location.href = '3-klaviyo-agent-ui-animated.html';
         }
 
         function setButtonToStop() {
-            isGenerating = true;
             const btn = document.getElementById('agentSubmitBtn');
             const arrow = document.getElementById('submitArrow');
             const stop = document.getElementById('stopIcon');
@@ -1196,7 +1193,6 @@
         }
 
         function setButtonToSubmit() {
-            isGenerating = false;
             const btn = document.getElementById('agentSubmitBtn');
             const arrow = document.getElementById('submitArrow');
             const stop = document.getElementById('stopIcon');
