@@ -122,7 +122,7 @@ export default function KlaviyoGenerator() {
               if (!prompt.trim()) return;
               const baseUrl = import.meta.env.BASE_URL ?? '/';
               const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-              const targetUrl = new URL('2-klaviyo-agent-ui.html', `${window.location.origin}${normalizedBase}`);
+              const targetUrl = new URL('2-klaviyo-agent-ui-animated.html', `${window.location.origin}${normalizedBase}`);
               window.location.href = targetUrl.toString();
             }}
           >

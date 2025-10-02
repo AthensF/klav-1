@@ -200,7 +200,7 @@
             overflow-y: auto;
             padding: 20px;
         }
-
+ 
         .agent-message {
             margin-bottom: 16px;
             padding: 12px;
@@ -1181,25 +1181,7 @@
         let isGenerating = false;
 
         function toggleGeneration() {
-            const btn = document.getElementById('agentSubmitBtn');
-            const arrow = document.getElementById('submitArrow');
-            const stop = document.getElementById('stopIcon');
-
-            if (isGenerating) {
-                // Stop generation
-                isGenerating = false;
-                btn.classList.remove('generating');
-                arrow.style.display = 'block';
-                stop.style.display = 'none';
-                // Could add logic here to actually stop the animation
-            } else {
-                // Start generation (if not already running)
-                if (currentStage >= stages.length) {
-                    // Animation already complete, do nothing
-                    return;
-                }
-                // Button will be switched to stop icon when animation starts
-            }
+            window.location.href = '3-klaviyo-agent-ui-animated.html';
         }
 
         function setButtonToStop() {
