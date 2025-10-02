@@ -52,7 +52,7 @@
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 40px;
+            padding: 20px 40px 120px 40px; /* Extra bottom padding for sticky footer */
         }
 
         .header {
@@ -334,6 +334,13 @@
             display: flex;
             flex-direction: column;
             gap: 28px;
+        }
+
+        /* Independent container spacing */
+        .email-composer-container,
+        .recipients-container,
+        .schedule-send-container {
+            margin-bottom: 28px;
         }
 
         .section-card {
@@ -802,12 +809,26 @@
             }
         }
 
-        .schedule-actions-bar {
+        /* Campaign Actions Sticky Footer */
+        .campaign-actions-footer {
+            position: fixed;
+            bottom: 0;
+            left: 240px; /* Account for sidebar width */
+            right: 400px; /* Account for agent panel width */
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 40px;
+            background: rgba(255, 255, 255, 0.98);
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.08);
+            backdrop-filter: blur(8px);
+            z-index: 100;
             opacity: 0;
             transition: opacity 0.6s ease;
         }
 
-        .schedule-actions-bar.visible {
+        .campaign-actions-footer.visible {
             opacity: 1;
         }
 
@@ -874,6 +895,105 @@
 
         .dialogue-btn.reject:hover {
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Confirmation Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-backdrop.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-backdrop.hidden {
+            display: none;
+        }
+
+        .confirmation-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-backdrop.visible .confirmation-modal {
+            transform: scale(1);
+        }
+
+        .confirmation-modal h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-modal p {
+            font-size: 15px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .confirmation-modal p strong {
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 28px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+
+        .btn-cancel:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+
+        .btn-confirm {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
     </style>
 </head>
@@ -995,7 +1115,7 @@
             </div>
         </div>
 
-        <div class="section-card visible" id="scheduleSection">
+        <div class="section-card visible schedule-send-container" id="scheduleSection">
             <h2>🗓️ Schedule or send</h2>
             <p class="section-subtitle">Choose when this campaign should go out to your recipients.</p>
             <div id="scheduleContent">
@@ -1043,10 +1163,25 @@
                 </div>
             </div>
 
-            <div class="schedule-actions-bar" id="actionBar">
-                <button class="button-secondary" type="button">Cancel</button>
-                <button class="button-primary" type="button">Schedule campaign</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Campaign Actions Sticky Footer -->
+    <div class="campaign-actions-footer" id="actionBar">
+        <button class="button-secondary" type="button">Cancel</button>
+        <button class="button-primary" type="button" onclick="showScheduleModal()">Schedule campaign</button>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-backdrop hidden" id="scheduleModal" role="dialog" aria-modal="true">
+        <div class="confirmation-modal">
+            <h2>Confirm Campaign Schedule</h2>
+            <p><strong>Send time:</strong> <span id="modalSendTime">Loading...</span></p>
+            <p><strong>Recipients:</strong> <span id="modalRecipients">Loading...</span></p>
+            <div class="modal-actions">
+                <button class="modal-btn btn-cancel" onclick="closeScheduleModal()">Cancel</button>
+                <button class="modal-btn btn-confirm" onclick="confirmSchedule()">Confirm & Schedule</button>
             </div>
         </div>
     </div>
@@ -1164,11 +1299,23 @@
                         const dialogue = document.getElementById('emailDialogue');
                         dialogue.classList.add('visible');
                         
-                        // Scroll to show dialogue after fade-in
+                        // Scroll to show dialogue with proper offset to avoid footer overlap
                         setTimeout(() => {
-                            section.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'end'
+                            const footer = document.querySelector('.campaign-actions-footer');
+                            const footerHeight = footer ? footer.offsetHeight : 80;
+                            const buffer = 30; // Extra breathing room
+                            
+                            const mainContent = document.querySelector('.main-content');
+                            const card = section;
+                            const cardRect = card.getBoundingClientRect();
+                            const cardBottom = card.offsetTop + card.offsetHeight;
+                            
+                            // Calculate target scroll position
+                            const targetScroll = cardBottom - window.innerHeight + footerHeight + buffer;
+                            
+                            mainContent.scrollTo({ 
+                                top: targetScroll, 
+                                behavior: 'smooth' 
                             });
                         }, 300);
                     }, 100);
@@ -1252,6 +1399,70 @@
         function toggleGeneration() {
             window.location.href = '3-klaviyo-agent-ui-animated.html';
         }
+
+        function showScheduleModal() {
+            // Extract send time from schedule inputs
+            const dateInput = document.getElementById('scheduleDate');
+            const timeInput = document.getElementById('scheduleTime');
+            const timezoneSelect = document.getElementById('scheduleTimezone');
+            
+            let sendTimeText = 'Not specified';
+            if (dateInput && timeInput) {
+                const date = new Date(dateInput.value + 'T' + timeInput.value);
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+                const formattedDate = date.toLocaleDateString('en-US', options);
+                const timezone = timezoneSelect ? timezoneSelect.options[timezoneSelect.selectedIndex].text : 'Local time';
+                sendTimeText = `${formattedDate} (${timezone})`;
+            }
+            
+            // Extract recipient count (simple extraction from visible text)
+            const recipientTag = document.querySelector('.audience-tag');
+            let recipientText = '1 recipient';
+            if (recipientTag) {
+                recipientText = '1 recipient (athens@wag-ai.com)';
+            }
+            
+            // Update modal content
+            document.getElementById('modalSendTime').textContent = sendTimeText;
+            document.getElementById('modalRecipients').textContent = recipientText;
+            
+            // Show modal
+            const modal = document.getElementById('scheduleModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('visible');
+            }, 10);
+        }
+
+        function closeScheduleModal() {
+            const modal = document.getElementById('scheduleModal');
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function confirmSchedule() {
+            window.location.href = '4-klaviyo-confirmation.html';
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('scheduleModal');
+                if (modal && modal.classList.contains('visible')) {
+                    closeScheduleModal();
+                }
+            }
+        });
+
+        // Close modal when clicking backdrop
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('scheduleModal');
+            if (e.target === modal) {
+                closeScheduleModal();
+            }
+        });
 
         function setButtonToStop() {
             isGenerating = true;
