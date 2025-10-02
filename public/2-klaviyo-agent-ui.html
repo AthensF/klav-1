@@ -540,6 +540,37 @@
             font-size: 0.85rem;
         }
 
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            min-height: 52px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+        }
+
+        .tag-input:focus-within {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .tag-input input {
+            flex: 1 1 160px;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 6px 4px;
+        }
+
+        .tag-input input::placeholder {
+            color: #94a3b8;
+        }
+
         .delivery-options {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -583,10 +614,20 @@
             margin-top: 18px;
         }
 
-        .schedule-actions {
+        .schedule-actions-bar {
+            position: sticky;
+            bottom: 0;
             display: flex;
+            justify-content: flex-end;
             gap: 12px;
-            margin-top: 24px;
+            padding: 16px 28px;
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.08);
+            backdrop-filter: blur(8px);
+            margin-top: 32px;
+            z-index: 20;
+            width: 100%;
         }
 
         .button-secondary,
@@ -707,18 +748,12 @@
 
                 <div class="form-stack">
                     <div class="form-group">
-                        <label for="segmentSearch">Search segments or lists</label>
-                        <input id="segmentSearch" type="text" class="input-control" placeholder="Start typing segment name" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Included audiences</label>
-                        <div class="audience-tags">
-                            <span class="audience-tag">VIP Customers<button type="button" aria-label="Remove VIP Customers">×</button></span>
-                            <span class="audience-tag">New Signups<button type="button" aria-label="Remove New Signups">×</button></span>
+                        <label for="segmentSearch">Send to</label>
+                        <div class="tag-input">
+                            <span class="audience-tag">athens@wag-ai.com<button type="button" aria-label="Remove athens@wag-ai.com">×</button></span>
+                            <input id="segmentSearch" type="text" placeholder="Start typing segment or email" />
                         </div>
-                    </div>
-
+                    </div>                    
                     <div class="form-group">
                         <label for="excludeSegments">Exclude audiences</label>
                         <textarea id="excludeSegments" class="textarea-control" rows="3" placeholder="Add segments, profiles or suppression lists to exclude"></textarea>
@@ -770,7 +805,7 @@
                 </div>
                 <div class="form-group">
                     <label for="scheduleTime">Time</label>
-                    <input id="scheduleTime" type="time" class="input-control" />
+                    <input id="scheduleTime" type="time" class="input-control" value="19:00" />
                 </div>
                 <div class="form-group">
                     <label for="scheduleTimezone">Timezone</label>
@@ -783,7 +818,7 @@
                 </div>
             </div>
 
-            <div class="schedule-actions">
+            <div class="schedule-actions-bar">
                 <button class="button-secondary" type="button">Cancel</button>
                 <button class="button-primary" type="button">Schedule campaign</button>
             </div>
