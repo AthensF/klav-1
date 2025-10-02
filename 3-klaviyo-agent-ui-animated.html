@@ -1172,6 +1172,55 @@
         .error-message.visible {
             display: block;
         }
+
+        /* Responsive Design */
+        /* Tablet and smaller screens */
+        @media (max-width: 1024px) {
+            .agent-panel {
+                width: 320px; /* Shrink agent panel on tablets */
+            }
+        }
+
+        /* Mobile screens */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none; /* Hide sidebar on mobile */
+            }
+
+            .main-content {
+                padding: 20px; /* Reduce padding on mobile */
+            }
+
+            .agent-panel {
+                width: 100%; /* Full width on mobile */
+                max-width: 400px; /* But cap at 400px */
+                border-left: none;
+                border-top: 1px solid #e5e7eb;
+            }
+
+            body {
+                flex-direction: column; /* Stack vertically on mobile */
+            }
+        }
+
+        /* Small mobile screens */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .agent-panel {
+                max-width: 100%; /* Full width on small mobile */
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .section-card {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
