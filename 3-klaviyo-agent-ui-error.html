@@ -854,6 +854,7 @@
         .footer-actions {
             display: flex;
             gap: 12px;
+            margin-left: auto;
         }
 
         .btn-ask-agent {
@@ -1124,6 +1125,15 @@
         .error-message.visible {
             display: block;
         }
+
+        /* Strikethrough styling for invalid email */
+        .email-input.invalid-strikethrough {
+            text-decoration: line-through;
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 8px 12px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -1140,13 +1150,10 @@
             <h1>Welcome to Klaviyo</h1>
         </div>
         <div class="content-grid">
-            <div class="section-card" id="emailSection">
+            <div class="section-card visible" id="emailSection">
                 <h2>✉️ Email composer</h2>
-                <p class="section-subtitle">Generating your email creative...</p>
-                <div class="knight-rider-loader" id="emailLoader">
-                    <div class="knight-rider-bar"></div>
-                </div>
-                <div class="generated-content" id="emailContent">
+                <p class="section-subtitle">Preview the creative your subscribers will receive before you pick recipients or scheduling.</p>
+                <div class="generated-content show" id="emailContent">
                 <div class="composer-card">
                     <div class="composer-inner">
                         <h1>Don't miss out!</h1>
@@ -1208,11 +1215,6 @@
                     </div>
                 </div>
                 </div>
-                <div class="accept-reject-dialogue" id="emailDialogue">
-                    <span class="dialogue-text">Accept this design?</span>
-                    <button class="dialogue-btn accept" onclick="handleAccept()">Accept</button>
-                    <button class="dialogue-btn reject" onclick="handleReject()">Reject</button>
-                </div>
             </div>
 
             <div class="section-card visible" id="recipientsSection">
@@ -1244,6 +1246,10 @@
                         </select>
                     </div>
                     </div>
+                </div>
+                <div class="accept-reject-dialogue hidden" id="recipientsDialogue">
+                    <button class="dialogue-btn accept" onclick="handleRecipientsAccept()">Accept</button>
+                    <button class="dialogue-btn reject" onclick="handleRecipientsReject()">Reject</button>
                 </div>
             </div>
         </div>
@@ -1337,7 +1343,8 @@
             <button class="clear-btn" onclick="clearAgent()">🔄 Clear</button>
         </div>
         <div class="agent-messages" id="agentMessages">            
-            <div class="user-message">In the email template, make the background colour and heading font colour coral orange instead of purple.</div>
+            <div class="user-message">Invalid email address detected. Can you help me fix it?</div>
+            <div class="agent-message" id="agentResponse" style="background: #E8F4FF;"></div>
         </div>
         <div class="agent-input">
             <div class="agent-input-wrapper">
@@ -1396,114 +1403,23 @@
         }
 
         // Animation orchestration
-        const stages = [
-            {
-                sectionId: 'emailSection',
-                loaderId: 'emailLoader',
-                contentId: 'emailContent',
-                subtitleOriginal: 'Preview the creative your subscribers will receive before you pick recipients or scheduling.',
-                agentMessage: '📧 <strong>Email Composer:</strong> The email composer has been refreshed with a coral orange backdrop while preserving your product highlights and CTA.',
-                delay: 0
-            }
-        ];
-
-        let currentStage = 0;
-
-        function showSection(stage) {
-            const section = document.getElementById(stage.sectionId);
-            
-            // Scroll to the section smoothly
-            section.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center'
-            });
-            
-            section.classList.add('visible');
-
-            // After 2 seconds (Knight Rider animation duration), show content
-            setTimeout(() => {
-                document.getElementById(stage.loaderId).style.display = 'none';
-                
-                // Update subtitle back to original
-                const subtitle = section.querySelector('.section-subtitle');
-                if (subtitle) {
-                    subtitle.textContent = stage.subtitleOriginal;
-                }
-                
-                const content = document.getElementById(stage.contentId);
-                content.classList.add('show');
-
-                // Add agent message
-                addAgentMessage(stage.agentMessage);
-
-                // Show accept/reject dialogue for email section
-                if (stage.sectionId === 'emailSection') {
-                    setTimeout(() => {
-                        const dialogue = document.getElementById('emailDialogue');
-                        dialogue.classList.add('visible');
-                        
-                        // Scroll to show dialogue with proper offset to avoid footer overlap
-                        setTimeout(() => {
-                            const footer = document.querySelector('.campaign-actions-footer');
-                            const footerHeight = footer ? footer.offsetHeight : 80;
-                            const buffer = 30; // Extra breathing room
-                            
-                            const mainContent = document.querySelector('.main-content');
-                            const card = section;
-                            const cardBottom = card.offsetTop + card.offsetHeight;
-                            
-                            // Calculate target scroll position
-                            const targetScroll = cardBottom - window.innerHeight + footerHeight + buffer;
-                            
-                            mainContent.scrollTo({ 
-                                top: targetScroll, 
-                                behavior: 'smooth' 
-                            });
-                        }, 300);
-                    }, 100);
-                }
-
-                // Move to next stage
-                currentStage++;
-                if (currentStage < stages.length) {
-                    setTimeout(() => showSection(stages[currentStage]), 200);
-                } else {
-                    // All stages complete
-                    setTimeout(showCompletion, 800);
-                }
-            }, 2000);
-        }
-
+        // All animation functions disabled for error page
+        // Sections are visible immediately on page load
+        
         function handleAccept() {
-            const dialogue = document.getElementById('emailDialogue');
-            dialogue.classList.add('hidden');
+            // Not used on error page
         }
 
         function handleReject() {
-            const dialogue = document.getElementById('emailDialogue');
-            dialogue.classList.add('hidden');
+            // Not used on error page
         }
 
         function addAgentMessage(message) {
-            // Agent messages disabled for this flow
+            // Not used on error page
         }
 
         function showCompletion() {
-            // Show action bar
-            document.getElementById('actionBar').classList.add('visible');
-
-            const agentMessages = document.getElementById('agentMessages');
-            const completionMsg = document.createElement('div');
-            completionMsg.className = 'agent-message';
-            completionMsg.innerHTML = '';
-            agentMessages.appendChild(completionMsg);
-            agentMessages.scrollTop = agentMessages.scrollHeight;
-
-            const summaryHtml = `✅ <strong>Email updated!</strong> Background and font color switched to coral orange. Ready to schedule or send.`;
-
-            animateAgentMessage(completionMsg, summaryHtml, 40, agentMessages).then(() => {
-                setButtonToSubmit();
-            });
+            // Not used on error page
         }
 
         function animateAgentMessage(element, htmlString, wordDelay = 40, scrollContainer) {
@@ -1585,13 +1501,12 @@
         }
 
         function handleAskAgent() {
-            // Store invalid email in sessionStorage before redirect
-            const input = document.getElementById('segmentSearch');
-            if (input && input.value.trim()) {
-                sessionStorage.setItem('invalidEmail', input.value.trim());
+            // On error page, "Ask Agent" button shouldn't be visible
+            // But if clicked, just scroll to agent panel
+            const agentPanel = document.querySelector('.agent-panel');
+            if (agentPanel) {
+                agentPanel.scrollIntoView({ behavior: 'smooth', block: 'end' });
             }
-            // Redirect to error handling page
-            window.location.href = '3-klaviyo-agent-ui-error.html';
         }
 
         function handleScheduleClick() {
@@ -1696,13 +1611,151 @@
             stop.style.display = 'none';
         }
 
+        // Typewriter animation for agent response
+        function typewriterAgentResponse() {
+            const responseText = `Sure, you can:
+
+**1. Remove the invalid address**: Delete the text from the input field
+
+**2. Correct the address**: Update it to be a valid email address
+
+Once fixed, you can proceed to schedule your campaign. Let me know if you need further assistance! ✅`;
+            
+            const agentResponseEl = document.getElementById('agentResponse');
+            if (!agentResponseEl) return;
+            
+            let index = 0;
+            const speed = 15; // milliseconds per character
+            
+            function type() {
+                if (index < responseText.length) {
+                    // Handle markdown-style bold text
+                    let char = responseText[index];
+                    
+                    // Check if we're at a ** marker for bold
+                    if (responseText.substring(index, index + 2) === '**') {
+                        // Find the closing **
+                        const closingIndex = responseText.indexOf('**', index + 2);
+                        if (closingIndex !== -1) {
+                            const boldText = responseText.substring(index + 2, closingIndex);
+                            const boldEl = document.createElement('strong');
+                            boldEl.textContent = boldText;
+                            agentResponseEl.appendChild(boldEl);
+                            index = closingIndex + 2;
+                            setTimeout(type, speed);
+                            return;
+                        }
+                    }
+                    
+                    // Handle newlines
+                    if (char === '\n') {
+                        agentResponseEl.appendChild(document.createElement('br'));
+                    } else {
+                        agentResponseEl.appendChild(document.createTextNode(char));
+                    }
+                    
+                    index++;
+                    
+                    // Auto-scroll to bottom
+                    const container = document.getElementById('agentMessages');
+                    if (container) {
+                        container.scrollTop = container.scrollHeight;
+                    }
+                    
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Handle Recipients Accept/Reject dialogue
+        function handleRecipientsAccept() {
+            const input = document.getElementById('segmentSearch');
+            const dialogue = document.getElementById('recipientsDialogue');
+            const errorMsg = document.getElementById('emailError');
+            
+            // Clear the input field
+            if (input) {
+                input.value = '';
+                input.classList.remove('invalid-strikethrough');
+                input.classList.remove('invalid');
+            }
+            
+            // Hide dialogue and error message
+            if (dialogue) {
+                dialogue.classList.add('hidden');
+            }
+            if (errorMsg) {
+                errorMsg.classList.remove('visible');
+            }
+        }
+
+        function handleRecipientsReject() {
+            const input = document.getElementById('segmentSearch');
+            const dialogue = document.getElementById('recipientsDialogue');
+            
+            // Keep email but change styling back to dotted underline
+            if (input) {
+                input.classList.remove('invalid-strikethrough');
+                input.classList.add('invalid');
+            }
+            
+            // Hide dialogue
+            if (dialogue) {
+                dialogue.classList.add('hidden');
+            }
+        }
+
         // Start the animation sequence on page load
         window.addEventListener('load', () => {
-            // Keep default agent messages, just add to them
+            // Show action bar immediately
+            document.getElementById('actionBar').classList.add('visible');
+            
+            // Load invalid email from sessionStorage
+            const invalidEmail = sessionStorage.getItem('invalidEmail');
+            if (invalidEmail) {
+                const input = document.getElementById('segmentSearch');
+                if (input) {
+                    input.value = invalidEmail;
+                    input.classList.add('invalid-strikethrough'); // Strikethrough + red background
+                }
+                // Clear sessionStorage after loading
+                sessionStorage.removeItem('invalidEmail');
+            }
+            
+            // Show error message by default
+            const errorMsg = document.getElementById('emailError');
+            if (errorMsg) {
+                errorMsg.textContent = 'Only valid addresses allowed';
+                errorMsg.classList.add('visible');
+            }
+            
+            // Position viewport at Recipients section immediately (no scroll animation)
             setTimeout(() => {
-                setButtonToStop();
-                showSection(stages[0]);
-            }, 500);
+                const recipientsSection = document.getElementById('recipientsSection');
+                if (recipientsSection) {
+                    recipientsSection.scrollIntoView({ 
+                        behavior: 'auto',  // Instant jump, no animation
+                        block: 'start'     // Position at top of viewport
+                    });
+                }
+                
+                // Show Accept/Reject dialogue immediately after scroll
+                const dialogue = document.getElementById('recipientsDialogue');
+                if (dialogue) {
+                    dialogue.classList.remove('hidden');
+                    setTimeout(() => {
+                        dialogue.classList.add('visible');
+                    }, 10);
+                }
+            }, 100);
+            
+            // Start agent response animation 500ms after dialogue appears
+            // This happens independently of user clicking Accept/Reject
+            setTimeout(() => {
+                typewriterAgentResponse();
+            }, 700); // 100ms scroll + 600ms buffer
         });
 
         // Email validation functions
@@ -1752,7 +1805,7 @@
                     e.preventDefault();
                     const email = input.value.trim().toLowerCase();
                     
-                    if (email.endsWith('@gmail.com') && email.length > 10) {
+                    if (email.endsWith('.com') && email.length > 10) {
                         if (addedEmails.has(email)) {
                             errorMsg.textContent = 'Email already added';
                             errorMsg.classList.add('visible');
