@@ -748,7 +748,7 @@
                 transparent
             );
             box-shadow: 0 0 20px #818cf8, 0 0 40px #6366f1;
-            animation: knight-rider 1s ease-in-out;
+            animation: knight-rider 2s ease-in-out;
         }
 
         @keyframes knight-rider {
@@ -1079,9 +1079,16 @@
 
         function showSection(stage) {
             const section = document.getElementById(stage.sectionId);
+            
+            // Scroll to the section smoothly
+            section.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center'
+            });
+            
             section.classList.add('visible');
 
-            // After 1 second (Knight Rider animation duration), show content
+            // After 2 seconds (Knight Rider animation duration), show content
             setTimeout(() => {
                 document.getElementById(stage.loaderId).style.display = 'none';
                 
@@ -1100,12 +1107,12 @@
                 // Move to next stage
                 currentStage++;
                 if (currentStage < stages.length) {
-                    setTimeout(() => showSection(stages[currentStage]), 800);
+                    setTimeout(() => showSection(stages[currentStage]), 200);
                 } else {
                     // All stages complete
                     setTimeout(showCompletion, 800);
                 }
-            }, 1000);
+            }, 2000);
         }
 
         function addAgentMessage(message) {
