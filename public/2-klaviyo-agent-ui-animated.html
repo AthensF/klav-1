@@ -210,6 +210,16 @@
             color: #6b7280;
         }
 
+        .user-message {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #5C4CDB;
+            color: white;
+            margin-left: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
         .agent-input {
             padding: 20px;
             border-top: 1px solid #e5e7eb;
@@ -986,7 +996,7 @@
         <div class="agent-messages" id="agentMessages">
             <div class="agent-message">👋 Hello! I'm your Klaviyo AI agent. I can help you create email campaigns.</div>
             <div class="agent-message">What would you like to do today?</div>
-            <div class="agent-message" style="background: #5C4CDB; color: white; margin-left: 20px;">Help me create an email for new subscribers to my newsletter. Include a discount code at the bottom. Make it fun and delightful, have it addressed to a test email only.</div>
+            <div class="user-message">Help me create an email for new subscribers to my newsletter. Include a discount code at the bottom. Make it fun and delightful, have it addressed to a test email only.</div>
         </div>
         <div class="agent-input">
             <div class="agent-input-wrapper">
@@ -1020,10 +1030,7 @@
             
             const container = document.getElementById('agentMessages');
             const userMsgEl = document.createElement('div');
-            userMsgEl.className = 'agent-message';
-            userMsgEl.style.background = '#5C4CDB';
-            userMsgEl.style.color = 'white';
-            userMsgEl.style.marginLeft = '20px';
+            userMsgEl.className = 'user-message';
             userMsgEl.textContent = userMsg;
             container.appendChild(userMsgEl);
 
@@ -1122,9 +1129,53 @@
         function showCompletion() {
             // Show action bar
             document.getElementById('actionBar').classList.add('visible');
-            
-            // Switch button back to submit arrow
-            setButtonToSubmit();
+
+            const agentMessages = document.getElementById('agentMessages');
+            const completionMsg = document.createElement('div');
+            completionMsg.className = 'agent-message';
+            completionMsg.innerHTML = '';
+            agentMessages.appendChild(completionMsg);
+            agentMessages.scrollTop = agentMessages.scrollHeight;
+
+            const summaryHtml = `✅ <strong>Generation Complete!</strong> Your campaign is ready to send. Review the details below:<br><br>
+📧 <strong>Email Composer:</strong> Subject line + engaging body with top 3 products, CTAs, and a limited-time discount code.<br>
+👥 <strong>Recipients:</strong> Primary contact set (athens@wag-ai.com), smart sending rules applied, suppression lists excluded.<br>
+🗓️ <strong>Schedule & Send:</strong> Campaign scheduled for 7:00 PM today, optimized for open rates across time zones.<br>
+👉 <strong>Next Step:</strong> If it all looks good, click “Schedule campaign” at the bottom.`;
+
+            animateAgentMessage(completionMsg, summaryHtml, 40, agentMessages).then(() => {
+                setButtonToSubmit();
+            });
+        }
+
+        function animateAgentMessage(element, htmlString, wordDelay = 40, scrollContainer) {
+            return new Promise((resolve) => {
+                const tokens = htmlString.match(/<[^>]*>|[^<\s]+|\s+/g) || [];
+                let index = 0;
+                let current = '';
+
+                function step() {
+                    if (index >= tokens.length) {
+                        resolve();
+                        return;
+                    }
+
+                    const token = tokens[index++];
+                    current += token;
+                    element.innerHTML = current;
+
+                    if (scrollContainer) {
+                        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+                    }
+
+                    const isTag = /^<[^>]+>$/.test(token.trim());
+                    const isWhitespace = /^\s+$/.test(token);
+                    const delay = isTag || isWhitespace ? 0 : wordDelay;
+                    setTimeout(step, delay);
+                }
+
+                step();
+            });
         }
 
         let isGenerating = false;
