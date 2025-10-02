@@ -188,7 +188,7 @@
 
         .beta-badge {
             background: #E8F4FF;
-            color: #5C4CDB;
+            color: #c2bc45;
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 11px;
@@ -215,9 +215,15 @@
             border-top: 1px solid #e5e7eb;
         }
 
+        .agent-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
         .agent-input input {
             width: 100%;
-            padding: 12px;
+            padding: 12px 52px 12px 12px;
             border: 1px solid #e5e7eb;
             border-radius: 6px;
             font-size: 14px;
@@ -226,6 +232,52 @@
         .agent-input input:focus {
             outline: none;
             border-color: #5C4CDB;
+        }
+
+        .agent-submit-btn {
+            position: absolute;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #c8a529;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+            color: white;
+        }
+
+        .agent-submit-btn:hover {
+            background: #db9f11;
+            transform: translateY(-1px);
+        }
+
+        .agent-submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .agent-submit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .agent-submit-btn .stop-icon {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        .agent-submit-btn.generating {
+            background: #ef4444;
+        }
+
+        .agent-submit-btn.generating:hover {
+            background: #dc2626;
         }
 
         .metric-grid {
@@ -661,6 +713,92 @@
             transform: translateY(-1px);
             box-shadow: 0 10px 20px rgba(17, 24, 39, 0.18);
         }
+
+        /* Animation-specific styles */
+        .section-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .section-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .knight-rider-loader {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+            margin: 24px 0;
+        }
+
+        .knight-rider-bar {
+            position: absolute;
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #818cf8 20%, 
+                #6366f1 50%, 
+                #818cf8 80%, 
+                transparent
+            );
+            box-shadow: 0 0 20px #818cf8, 0 0 40px #6366f1;
+            animation: knight-rider 1s ease-in-out;
+        }
+
+        @keyframes knight-rider {
+            0% { left: -30%; }
+            100% { left: 100%; }
+        }
+
+        .generated-content {
+            display: none;
+        }
+
+        .generated-content.show {
+            display: block;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .agent-message {
+            animation: slideIn 0.4s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .schedule-actions-bar {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .schedule-actions-bar.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -677,9 +815,13 @@
             <h1>Welcome to Klaviyo</h1>
         </div>
         <div class="content-grid">
-            <div class="section-card">
+            <div class="section-card" id="emailSection">
                 <h2>✉️ Email composer</h2>
-                <p class="section-subtitle">Preview the creative your subscribers will receive before you pick recipients or scheduling.</p>
+                <p class="section-subtitle">Generating your email creative...</p>
+                <div class="knight-rider-loader" id="emailLoader">
+                    <div class="knight-rider-bar"></div>
+                </div>
+                <div class="generated-content" id="emailContent">
                 <div class="composer-card">
                     <div class="composer-inner">
                         <h1>Don't miss out!</h1>
@@ -740,12 +882,16 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
 
-            <div class="section-card">
+            <div class="section-card" id="recipientsSection">
                 <h2>👥 Recipients</h2>
-                <p class="section-subtitle">Decide who should receive this send and confirm your targeting.</p>
-
+                <p class="section-subtitle">Identifying your target audience...</p>
+                <div class="knight-rider-loader" id="recipientsLoader">
+                    <div class="knight-rider-bar"></div>
+                </div>
+                <div class="generated-content" id="recipientsContent">
                 <div class="form-stack">
                     <div class="form-group">
                         <label for="segmentSearch">Send to</label>
@@ -767,13 +913,17 @@
                         </select>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
 
-        <div class="section-card">
+        <div class="section-card" id="scheduleSection">
             <h2>🗓️ Schedule or send</h2>
-            <p class="section-subtitle">Choose when this campaign should go out to your recipients.</p>
-
+            <p class="section-subtitle">Optimizing send time for maximum engagement...</p>
+            <div class="knight-rider-loader" id="scheduleLoader">
+                <div class="knight-rider-bar"></div>
+            </div>
+            <div class="generated-content" id="scheduleContent">
             <div class="delivery-options">
                 <label class="option-tile active">
                     <input type="radio" name="sendOption" value="schedule" checked />
@@ -818,14 +968,15 @@
                 </div>
             </div>
 
-            <div class="schedule-actions-bar">
+            <div class="schedule-actions-bar" id="actionBar">
                 <button class="button-secondary" type="button">Cancel</button>
                 <button class="button-primary" type="button">Schedule campaign</button>
+            </div>
             </div>
         </div>
     </div>
 
-    <div class="agent-panel">
+    <div class="agent-panel" id="agentPanel">
         <div class="agent-header">
             <div class="agent-title">
                 Agent <span class="beta-badge">BETA</span>
@@ -833,11 +984,20 @@
             <button class="clear-btn" onclick="clearAgent()">🔄 Clear</button>
         </div>
         <div class="agent-messages" id="agentMessages">
-            <div class="agent-message">👋 Hello! I'm your Klaviyo AI agent. I can help you create campaigns, analyze performance, and optimize your marketing.</div>
+            <div class="agent-message">👋 Hello! I'm your Klaviyo AI agent. I can help you create email campaigns.</div>
             <div class="agent-message">What would you like to do today?</div>
+            <div class="agent-message" style="background: #5C4CDB; color: white; margin-left: 20px;">Help me create an email for new subscribers to my newsletter. Include a discount code at the bottom. Make it fun and delightful, have it addressed to a test email only.</div>
         </div>
         <div class="agent-input">
-            <input type="text" placeholder="Ask anything (CMD+L)" id="agentInput" onkeypress="handleAgentInput(event)">
+            <div class="agent-input-wrapper">
+                <input type="text" placeholder="Ask anything (CMD+L)" id="agentInput" onkeypress="handleAgentInput(event)">
+                <button class="agent-submit-btn" id="agentSubmitBtn" onclick="toggleGeneration()" aria-label="Submit">
+                    <svg id="submitArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>
+                    <div id="stopIcon" class="stop-icon" style="display: none;"></div>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -852,26 +1012,33 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        function submitAgentInput() {
+            const input = document.getElementById('agentInput');
+            const userMsg = input.value.trim();
+            
+            if (!userMsg) return;
+            
+            const container = document.getElementById('agentMessages');
+            const userMsgEl = document.createElement('div');
+            userMsgEl.className = 'agent-message';
+            userMsgEl.style.background = '#5C4CDB';
+            userMsgEl.style.color = 'white';
+            userMsgEl.style.marginLeft = '20px';
+            userMsgEl.textContent = userMsg;
+            container.appendChild(userMsgEl);
+
+            input.value = '';
+
+            setTimeout(() => {
+                showAgentMessage('Working on that for you... 🚀');
+            }, 500);
+
+            container.scrollTop = container.scrollHeight;
+        }
+
         function handleAgentInput(e) {
-            if (e.key === 'Enter' && e.target.value.trim()) {
-                const userMsg = e.target.value.trim();
-                const container = document.getElementById('agentMessages');
-
-                const userMsgEl = document.createElement('div');
-                userMsgEl.className = 'agent-message';
-                userMsgEl.style.background = '#5C4CDB';
-                userMsgEl.style.color = 'white';
-                userMsgEl.style.marginLeft = '20px';
-                userMsgEl.textContent = userMsg;
-                container.appendChild(userMsgEl);
-
-                e.target.value = '';
-
-                setTimeout(() => {
-                    showAgentMessage('Working on that for you... 🚀');
-                }, 500);
-
-                container.scrollTop = container.scrollHeight;
+            if (e.key === 'Enter') {
+                submitAgentInput();
             }
         }
 
@@ -879,6 +1046,134 @@
             const container = document.getElementById('agentMessages');
             container.innerHTML = '<div class="agent-message">👋 Hello! I\'m your Klaviyo AI agent. I can help you create campaigns, analyze performance, and optimize your marketing.</div><div class="agent-message">What would you like to do today?</div>';
         }
+
+        // Animation orchestration
+        const stages = [
+            {
+                sectionId: 'emailSection',
+                loaderId: 'emailLoader',
+                contentId: 'emailContent',
+                subtitleOriginal: 'Preview the creative your subscribers will receive before you pick recipients or scheduling.',
+                agentMessage: '📧 <strong>Email Composer:</strong> I\'ve crafted a compelling email with an attention-grabbing subject line and engaging product showcase. The design features your top three products with clear calls-to-action and a limited-time discount code to drive urgency.',
+                delay: 0
+            },
+            {
+                sectionId: 'recipientsSection',
+                loaderId: 'recipientsLoader',
+                contentId: 'recipientsContent',
+                subtitleOriginal: 'Decide who should receive this send and confirm your targeting.',
+                agentMessage: '👥 <strong>Recipients:</strong> I\'ve identified your primary recipient (athens@wag-ai.com) and configured smart sending rules to respect engagement windows. The targeting is set to exclude suppression lists and honor your audience preferences.',
+                delay: 1000
+            },
+            {
+                sectionId: 'scheduleSection',
+                loaderId: 'scheduleLoader',
+                contentId: 'scheduleContent',
+                subtitleOriginal: 'Choose when this campaign should go out to your recipients.',
+                agentMessage: '🗓️ <strong>Schedule & Send:</strong> Based on optimal engagement patterns, I\'ve scheduled your campaign for 7:00 PM today using a fixed send time. This timing maximizes open rates for your target audience while respecting recipient local timezones.',
+                delay: 2000
+            }
+        ];
+
+        let currentStage = 0;
+
+        function showSection(stage) {
+            const section = document.getElementById(stage.sectionId);
+            section.classList.add('visible');
+
+            // After 1 second (Knight Rider animation duration), show content
+            setTimeout(() => {
+                document.getElementById(stage.loaderId).style.display = 'none';
+                
+                // Update subtitle back to original
+                const subtitle = section.querySelector('.section-subtitle');
+                if (subtitle) {
+                    subtitle.textContent = stage.subtitleOriginal;
+                }
+                
+                const content = document.getElementById(stage.contentId);
+                content.classList.add('show');
+
+                // Add agent message
+                addAgentMessage(stage.agentMessage);
+
+                // Move to next stage
+                currentStage++;
+                if (currentStage < stages.length) {
+                    setTimeout(() => showSection(stages[currentStage]), 800);
+                } else {
+                    // All stages complete
+                    setTimeout(showCompletion, 800);
+                }
+            }, 1000);
+        }
+
+        function addAgentMessage(message) {
+            // Do nothing - messages disabled
+        }
+
+        function showCompletion() {
+            // Show action bar
+            document.getElementById('actionBar').classList.add('visible');
+            
+            // Switch button back to submit arrow
+            setButtonToSubmit();
+        }
+
+        let isGenerating = false;
+
+        function toggleGeneration() {
+            const btn = document.getElementById('agentSubmitBtn');
+            const arrow = document.getElementById('submitArrow');
+            const stop = document.getElementById('stopIcon');
+
+            if (isGenerating) {
+                // Stop generation
+                isGenerating = false;
+                btn.classList.remove('generating');
+                arrow.style.display = 'block';
+                stop.style.display = 'none';
+                // Could add logic here to actually stop the animation
+            } else {
+                // Start generation (if not already running)
+                if (currentStage >= stages.length) {
+                    // Animation already complete, do nothing
+                    return;
+                }
+                // Button will be switched to stop icon when animation starts
+            }
+        }
+
+        function setButtonToStop() {
+            isGenerating = true;
+            const btn = document.getElementById('agentSubmitBtn');
+            const arrow = document.getElementById('submitArrow');
+            const stop = document.getElementById('stopIcon');
+            
+            btn.classList.add('generating');
+            arrow.style.display = 'none';
+            stop.style.display = 'block';
+        }
+
+        function setButtonToSubmit() {
+            isGenerating = false;
+            const btn = document.getElementById('agentSubmitBtn');
+            const arrow = document.getElementById('submitArrow');
+            const stop = document.getElementById('stopIcon');
+            
+            btn.classList.remove('generating');
+            arrow.style.display = 'block';
+            stop.style.display = 'none';
+        }
+
+        // Start the animation sequence on page load
+        window.addEventListener('load', () => {
+            // Keep default agent messages, just add to them
+            setTimeout(() => {
+                setButtonToStop();
+                showSection(stages[0]);
+            }, 500);
+        });
     </script>
 </body>
 </html>
