@@ -419,15 +419,15 @@
         }
 
         .product-image.dessert-bars {
-            background-image: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            background-image: url('ice1.png');
         }
 
         .product-image.ice-cream {
-            background-image: linear-gradient(135deg, #f472b6, #facc15);
+            background-image: url('ice2.png');
         }
 
         .product-image.cookie-sandos {
-            background-image: linear-gradient(135deg, #a3a3a3, #1f2937);
+            background-image: url('ice3.png');
         }
 
         .product-info .product-name {
@@ -854,6 +854,7 @@
         .footer-actions {
             display: flex;
             gap: 12px;
+            margin-left: auto;
         }
 
         .btn-ask-agent {
@@ -876,6 +877,53 @@
 
         .btn-ask-agent.hidden {
             display: none;
+        }
+
+        /* Footer Knight Rider Loading */
+        .footer-loading {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .footer-loading.visible {
+            display: flex;
+        }
+
+        .footer-knight-rider {
+            width: 200px;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .footer-knight-rider-bar {
+            position: absolute;
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #818cf8 20%, 
+                #6366f1 50%, 
+                #818cf8 80%, 
+                transparent
+            );
+            box-shadow: 0 0 15px #818cf8, 0 0 30px #6366f1;
+            animation: knight-rider-footer 0.5s ease-in-out;
+        }
+
+        @keyframes knight-rider-footer {
+            0% { left: -30%; }
+            100% { left: 100%; }
+        }
+
+        .footer-loading-text {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
         }
 
         /* Accept/Reject Dialogue */
@@ -1129,10 +1177,10 @@
 <body>
     <div class="sidebar">
         <div class="logo">K</div>
-        <div class="nav-item active">🏠 Home</div>
-        <div class="nav-item">✉️ Email composer</div>
-        <div class="nav-item">👥 Recipients </div>
-        <div class="nav-item">🗓️ Schedule / Send</div>
+        <div class="nav-item active" onclick="window.location.href='index.html'">🏠 Home</div>
+        <div class="nav-item" onclick="document.getElementById('emailSection').scrollIntoView({behavior: 'smooth', block: 'start'})">✉️ Email composer</div>
+        <div class="nav-item" onclick="document.getElementById('recipientsSection').scrollIntoView({behavior: 'smooth', block: 'start'})">👥 Recipients </div>
+        <div class="nav-item" onclick="document.getElementById('scheduleSection').scrollIntoView({behavior: 'smooth', block: 'start'})">🗓️ Schedule / Send</div>
     </div>
 
     <div class="main-content">
@@ -1302,6 +1350,14 @@
 
     <!-- Campaign Actions Sticky Footer -->
     <div class="campaign-actions-footer" id="actionBar">
+        <!-- Loading animation (hidden by default) -->
+        <div class="footer-loading" id="footerLoading">
+            <div class="footer-knight-rider">
+                <div class="footer-knight-rider-bar"></div>
+            </div>
+            <span class="footer-loading-text">Validating...</span>
+        </div>
+        
         <!-- Error message on left (hidden by default) -->
         <div class="footer-error-message hidden" id="footerError">
             <span class="error-icon">⚠️</span>
@@ -1309,9 +1365,9 @@
         </div>
         
         <!-- Buttons on right -->
-        <div class="footer-actions">
-            <button class="button-secondary" type="button">Cancel</button>
+        <div class="footer-actions" id="footerActions">
             <button class="btn-ask-agent hidden" id="askAgentBtn" type="button" onclick="handleAskAgent()">Ask Agent</button>
+            <button class="button-secondary" type="button">Cancel</button>
             <button class="button-primary" type="button" onclick="handleScheduleClick()">Schedule campaign</button>
         </div>
     </div>
@@ -1598,12 +1654,38 @@
             const validation = validateRecipients();
             
             if (!validation.valid) {
-                showFooterError(validation.error);
+                // Show Knight Rider loading animation
+                showFooterLoading();
+                
+                // After 500ms, hide loading and show error
+                setTimeout(() => {
+                    hideFooterLoading();
+                    showFooterError(validation.error);
+                }, 500);
+                
                 return; // Don't show confirmation modal
             } else {
                 hideFooterError(); // Clear any previous errors
                 showScheduleModal(); // Existing flow
             }
+        }
+
+        function showFooterLoading() {
+            const loading = document.getElementById('footerLoading');
+            const actions = document.getElementById('footerActions');
+            const errorMsg = document.getElementById('footerError');
+            
+            if (loading) loading.classList.add('visible');
+            if (actions) actions.style.display = 'none';
+            if (errorMsg) errorMsg.classList.add('hidden');
+        }
+
+        function hideFooterLoading() {
+            const loading = document.getElementById('footerLoading');
+            const actions = document.getElementById('footerActions');
+            
+            if (loading) loading.classList.remove('visible');
+            if (actions) actions.style.display = 'flex';
         }
 
         function showScheduleModal() {

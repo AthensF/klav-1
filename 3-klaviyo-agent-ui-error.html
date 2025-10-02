@@ -419,15 +419,15 @@
         }
 
         .product-image.dessert-bars {
-            background-image: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            background-image: url('ice1.png');
         }
 
         .product-image.ice-cream {
-            background-image: linear-gradient(135deg, #f472b6, #facc15);
+            background-image: url('ice2.png');
         }
 
         .product-image.cookie-sandos {
-            background-image: linear-gradient(135deg, #a3a3a3, #1f2937);
+            background-image: url('ice3.png');
         }
 
         .product-info .product-name {
@@ -882,12 +882,12 @@
         /* Accept/Reject Dialogue */
         .accept-reject-dialogue {
             position: absolute;
-            bottom: 16px;
+            top: 160px;
             right: 16px;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            padding: 16px 20px;
+            padding: 10px 10px;
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
             display: flex;
             gap: 12px;
@@ -1139,10 +1139,10 @@
 <body>
     <div class="sidebar">
         <div class="logo">K</div>
-        <div class="nav-item active">🏠 Home</div>
-        <div class="nav-item">✉️ Email composer</div>
-        <div class="nav-item">👥 Recipients </div>
-        <div class="nav-item">🗓️ Schedule / Send</div>
+        <div class="nav-item active" onclick="window.location.href='index.html'">🏠 Home</div>
+        <div class="nav-item" onclick="document.getElementById('emailSection').scrollIntoView({behavior: 'smooth', block: 'start'})">✉️ Email composer</div>
+        <div class="nav-item" onclick="document.getElementById('recipientsSection').scrollIntoView({behavior: 'smooth', block: 'start'})">👥 Recipients </div>
+        <div class="nav-item" onclick="document.getElementById('scheduleSection').scrollIntoView({behavior: 'smooth', block: 'start'})">🗓️ Schedule / Send</div>
     </div>
 
     <div class="main-content">
@@ -1344,7 +1344,7 @@
         </div>
         <div class="agent-messages" id="agentMessages">            
             <div class="user-message">Invalid email address detected. Can you help me fix it?</div>
-            <div class="agent-message" id="agentResponse" style="background: #E8F4FF;"></div>
+            <div class="agent-message" id="agentResponse"></div>
         </div>
         <div class="agent-input">
             <div class="agent-input-wrapper">
@@ -1613,13 +1613,7 @@
 
         // Typewriter animation for agent response
         function typewriterAgentResponse() {
-            const responseText = `Sure, you can:
-
-**1. Remove the invalid address**: Delete the text from the input field
-
-**2. Correct the address**: Update it to be a valid email address
-
-Once fixed, you can proceed to schedule your campaign. Let me know if you need further assistance! ✅`;
+            const responseText = `Sure, you can:<br><br><strong>1. Remove the invalid address</strong>: Delete the text from the input field<br><br><strong>2. Correct the address</strong>: Update it to be a valid email address<br><br>Once fixed, you can proceed to schedule your campaign. Let me know if you need further assistance! ✅`;
             
             const agentResponseEl = document.getElementById('agentResponse');
             if (!agentResponseEl) return;
@@ -1629,31 +1623,39 @@ Once fixed, you can proceed to schedule your campaign. Let me know if you need f
             
             function type() {
                 if (index < responseText.length) {
-                    // Handle markdown-style bold text
                     let char = responseText[index];
                     
-                    // Check if we're at a ** marker for bold
-                    if (responseText.substring(index, index + 2) === '**') {
-                        // Find the closing **
-                        const closingIndex = responseText.indexOf('**', index + 2);
+                    // Check if we're at an HTML tag
+                    if (char === '<') {
+                        const closingIndex = responseText.indexOf('>', index);
                         if (closingIndex !== -1) {
-                            const boldText = responseText.substring(index + 2, closingIndex);
-                            const boldEl = document.createElement('strong');
-                            boldEl.textContent = boldText;
-                            agentResponseEl.appendChild(boldEl);
-                            index = closingIndex + 2;
+                            const tag = responseText.substring(index, closingIndex + 1);
+                            
+                            // Handle different HTML tags
+                            if (tag === '<br>') {
+                                agentResponseEl.appendChild(document.createElement('br'));
+                            } else if (tag === '<strong>') {
+                                // Find closing </strong>
+                                const closingTagIndex = responseText.indexOf('</strong>', closingIndex + 1);
+                                if (closingTagIndex !== -1) {
+                                    const boldText = responseText.substring(closingIndex + 1, closingTagIndex);
+                                    const boldEl = document.createElement('strong');
+                                    boldEl.textContent = boldText;
+                                    agentResponseEl.appendChild(boldEl);
+                                    index = closingTagIndex + '</strong>'.length;
+                                    setTimeout(type, speed);
+                                    return;
+                                }
+                            }
+                            
+                            index = closingIndex + 1;
                             setTimeout(type, speed);
                             return;
                         }
                     }
                     
-                    // Handle newlines
-                    if (char === '\n') {
-                        agentResponseEl.appendChild(document.createElement('br'));
-                    } else {
-                        agentResponseEl.appendChild(document.createTextNode(char));
-                    }
-                    
+                    // Regular character
+                    agentResponseEl.appendChild(document.createTextNode(char));
                     index++;
                     
                     // Auto-scroll to bottom
@@ -1724,12 +1726,21 @@ Once fixed, you can proceed to schedule your campaign. Let me know if you need f
                 sessionStorage.removeItem('invalidEmail');
             }
             
-            // Show error message by default
+            // Show Knight Rider loading for error message
+            const validationLoader = document.getElementById('emailValidationLoader');
             const errorMsg = document.getElementById('emailError');
-            if (errorMsg) {
-                errorMsg.textContent = 'Only valid addresses allowed';
-                errorMsg.classList.add('visible');
-            }
+            
+            // After 500ms, hide loader and show error message
+            setTimeout(() => {
+                if (validationLoader) {
+                    validationLoader.style.display = 'none';
+                }
+                if (errorMsg) {
+                    errorMsg.textContent = 'Only valid addresses allowed';
+                    errorMsg.style.display = 'block';
+                    errorMsg.classList.add('visible');
+                }
+            }, 500);
             
             // Position viewport at Recipients section immediately (no scroll animation)
             setTimeout(() => {
