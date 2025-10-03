@@ -10,7 +10,9 @@ to
 
 ![Demo](public/klav-1-demo.gif)
 
-this
+Try it here:
+
+https://athensf.github.io/klav-1/
 
 ## 🚀 Features
 
