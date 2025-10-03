@@ -257,6 +257,37 @@
             font-weight: bold;
             flex-shrink: 0;
         }
+
+        /* Responsive Design */
+        /* Mobile screens */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none; /* Hide sidebar on mobile */
+            }
+
+            .main-content {
+                padding: 20px; /* Reduce padding on mobile */
+            }
+
+            body {
+                flex-direction: column; /* Stack vertically on mobile */
+            }
+        }
+
+        /* Small mobile screens */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .confirmation-card {
+                padding: 32px 20px;
+            }
+
+            .confirmation-card h1 {
+                font-size: 28px;
+            }
+        }
     </style>
 </head>
 <body>

@@ -68,7 +68,6 @@ export default function KlaviyoGenerator() {
         {/* Type Selection */}
         <div className="flex gap-3 justify-center mb-8">
           {[
-            { icon: <Layout />, label: 'Campaign' },
             { icon: <Mail />, label: 'Email' },
             { icon: <FileText />, label: 'Flow' },
             { icon: <Share2 />, label: 'SMS' }
@@ -85,32 +84,6 @@ export default function KlaviyoGenerator() {
               <span className="text-sm font-medium">{type.label}</span>
             </button>
           ))}
-        </div>
-
-        {/* Options */}
-        <div className="flex gap-3 justify-center mb-6">
-          <select
-            value={cards}
-            onChange={(e) => setCards(Number(e.target.value))}
-            className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm"
-          >
-            {[5, 10, 15, 20].map(n => (
-              <option key={n} value={n}>{n} slides</option>
-            ))}
-          </select>
-          <select
-            value={style}
-            onChange={(e) => setStyle(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm"
-          >
-            <option>Default</option>
-            <option>Modern</option>
-            <option>Minimal</option>
-          </select>
-          <select className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm">
-            <option>English (US)</option>
-            <option>English (UK)</option>
-          </select>
         </div>
 
         {/* Prompt Input */}
